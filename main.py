@@ -105,7 +105,7 @@ now = datetime.now()
 current_date = f"{dias_semana[now.weekday()]}, {now.day} de {meses[now.month - 1]} de {now.year}"
 
 # En el side bar ingresar una imagen arriba de la fecha
-st.sidebar.image(imagen/fondo_pantalla.jpg, width=150)
+st.sidebar.image(https://github.com/Blasferp/Control-de-Comercio/blob/a36e17566e221457367d1fd3c56f913253220ce9/imagen/fondo_pantalla.jpg, width=150)
 
 # Agregar líneas en blanco para dejar espacio
 st.sidebar.markdown("""\n\n\n""")
