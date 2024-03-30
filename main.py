@@ -605,8 +605,6 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
 
 ################################################################################################
 
-import pandas as pd
-import streamlit as st
 
 if selected == 'Egresos':    
     st.title(f'💸 Egresos') 
@@ -623,7 +621,7 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
         try:
             df = pd.read_csv(nombre_archivo)
         except FileNotFoundError:
-            df = pd.DataFrame(columns=['Nombre', 'Direccion', 'Contacto', 'Telefono', 'Importe', 'Descripcion'])
+            df = pd.DataFrame(columns=['Nombre', 'Direccion', 'Contacto', 'Telefono', 'Importe', 'Descripcion', 'Fecha'])
         return df
 
     # Función para guardar el DataFrame en un archivo CSV
@@ -677,7 +675,8 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
                         'Contacto': [contacto],
                         'Telefono': [telefono],
                         'Importe': [importe],
-                        'Descripcion': [descripcion]
+                        'Descripcion': [descripcion],
+                        'Fecha': [datetime.now()]  # Guardar la fecha actual
                     })
                     df_egresos_creados = pd.concat([df_egresos_creados, nuevo_egreso], ignore_index=True)
                     guardar_df(df_egresos_creados, "Egresos_Creados.csv")
