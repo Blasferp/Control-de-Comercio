@@ -187,7 +187,7 @@ if selected == 'Productos':
 
             if not Nombre_Producto:
                 st.sidebar.warning("Debe ingresar el nombre del producto.")
-            elif Nombre_Producto.lower() in df['Nombre_Producto'].str.lower().values:
+            elif Nombre_Producto in df['Nombre_Producto'].values:
                 st.sidebar.warning("El producto ya existe. Por favor, elige otro nombre.")
             else:
                 # Crear nueva fila con los datos del nuevo producto
@@ -210,10 +210,10 @@ if selected == 'Productos':
         producto_modificar = st.sidebar.selectbox("Selecciona un producto:", opciones)
 
         if producto_modificar:
-            indice_modificar = df[df['Nombre_Producto'] == producto_modificar].index[0]
-            Nombre_Producto = st.sidebar.text_input('Nombre_Producto:', value=producto_modificar)  # Agregar campo para modificar el nombre
+            indice_modificar = df[df['Nombre_Producto'] == producto_modificar].index[0].upper()
+            Nombre_Producto = st.sidebar.text_input('Nombre_Producto:', value=producto_modificar).upper()  # Agregar campo para modificar el nombre
             Cantidad = st.sidebar.number_input('Cantidad:', min_value=0, step=1, value=df.loc[indice_modificar, 'Cantidad'])
-            Precio_Compra = st.sidebar.number_input('Precio_Compra:', min_value=0.0, value=df.loc[indice_modificar, 'Precio_Compra'])
+            Precio_Compra = st.sidebar.number_input('Precio_Compra:', min_value=0.0, value=float(df.loc[indice_modificar, 'Precio_Compra']), format="%.2f")
 
             if st.sidebar.button("Modificar"):
                 # Actualizar los valores en el DataFrame
@@ -289,17 +289,17 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
     
     if accion == "Agregar Nuevo Proveedor":
         st.sidebar.title("Agregar Nuevo Proveedor")
-        Nombre_Proveedor = st.sidebar.text_input('Nombre del Proveedor:')
-        Contacto = st.sidebar.text_input('Contacto:')
-        Telefono = st.sidebar.text_input('Teléfono:')
-        Email = st.sidebar.text_input('Email:')
-        Direccion = st.sidebar.text_input('Dirección:')
+        Nombre_Proveedor = st.sidebar.text_input('Nombre del Proveedor:').upper()
+        Contacto = st.sidebar.text_input('Contacto:').upper()
+        Telefono = st.sidebar.text_input('Teléfono:').upper()
+        Email = st.sidebar.text_input('Email:').upper()
+        Direccion = st.sidebar.text_input('Dirección:').upper()
         fecha_actual = datetime.now()
         
         if st.sidebar.button("Agregar"):
             if not all([Nombre_Proveedor, Contacto, Telefono, Email, Direccion]):
                 st.sidebar.warning("Todos los campos son obligatorios. Por favor, llene todos los campos.")
-            elif Nombre_Proveedor.lower() in df['Nombre_Proveedor'].str.lower().values:
+            elif Nombre_Proveedor in df['Nombre_Proveedor'].values:
                 st.sidebar.warning("El proveedor ya existe. Por favor, elige otro nombre.")
             else:
                 # Crear nueva fila con los datos del nuevo proveedor
@@ -326,12 +326,12 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
         indice_modificar = None  # Para manejar el caso cuando no se selecciona ningún proveedor
 
         if Proveedor_modificar:
-            indice_modificar = df[df['Nombre_Proveedor'] == Proveedor_modificar].index[0]
-            Nombre_Proveedor = st.sidebar.text_input('Nombre del Proveedor:', value=df.loc[indice_modificar, 'Nombre_Proveedor'])
-            Contacto = st.sidebar.text_input('Contacto:', value=df.loc[indice_modificar, 'Contacto'])  # Corregido
-            Telefono = st.sidebar.text_input('Teléfono:', value=df.loc[indice_modificar, 'Telefono'])
-            Email = st.sidebar.text_input('Email:', value=df.loc[indice_modificar, 'Email'])
-            Direccion = st.sidebar.text_input('Dirección:', value=df.loc[indice_modificar, 'Direccion'])
+            indice_modificar = df[df['Nombre_Proveedor'] == Proveedor_modificar].index[0].upper()
+            Nombre_Proveedor = st.sidebar.text_input('Nombre del Proveedor:', value=df.loc[indice_modificar, 'Nombre_Proveedor']).upper()
+            Contacto = st.sidebar.text_input('Contacto:', value=df.loc[indice_modificar, 'Contacto']).upper()  
+            Telefono = st.sidebar.text_input('Teléfono:', value=df.loc[indice_modificar, 'Telefono']).upper()
+            Email = st.sidebar.text_input('Email:', value=df.loc[indice_modificar, 'Email']).upper()
+            Direccion = st.sidebar.text_input('Dirección:', value=df.loc[indice_modificar, 'Direccion']).upper()
 
             if st.sidebar.button("Modificar"):
                 if not all([Nombre_Proveedor, Contacto, Telefono, Email, Direccion]):
@@ -410,11 +410,11 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
     
     if accion == "Agregar Nuevo Cliente":
         st.sidebar.title("Agregar Nuevo Cliente")
-        Nombre_Cliente = st.sidebar.text_input('Nombre_Cliente:')
-        Contacto = st.sidebar.text_input('Contacto:')
-        Telefono = st.sidebar.text_input('Telefono:')
-        Email = st.sidebar.text_input('Email:')
-        Direccion = st.sidebar.text_input('Direccion:')
+        Nombre_Cliente = st.sidebar.text_input('Nombre_Cliente:').upper()
+        Contacto = st.sidebar.text_input('Contacto:').upper()
+        Telefono = st.sidebar.text_input('Telefono:').upper()
+        Email = st.sidebar.text_input('Email:').upper()
+        Direccion = st.sidebar.text_input('Direccion:').upper()
         fecha_actual = datetime.now()
         
         if st.sidebar.button("Agregar"):
@@ -424,7 +424,7 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
             # Validar que todos los campos estén completos
             if not Nombre_Cliente or not Contacto or not Telefono or not Email or not Direccion:
                 st.sidebar.warning("Por favor completa todos los campos.")
-            elif Nombre_Cliente.lower() in df['Nombre_Cliente'].str.lower().values:
+            elif Nombre_Cliente in df['Nombre_Cliente'].values:
                 st.sidebar.warning("El Cliente ya existe. Por favor, elige otro nombre.")
             else:
                 # Crear nueva fila con los datos del nuevo Cliente
@@ -449,11 +449,11 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
         Cliente_modificar = st.sidebar.selectbox("Selecciona un Cliente:", opciones)
 
         if Cliente_modificar:
-            indice_modificar = df[df['Nombre_Cliente'] == Cliente_modificar].index[0]
-            Telefono = st.sidebar.text_input('Telefono:', value=df.loc[indice_modificar, 'Telefono'])
-            Contacto = st.sidebar.text_input('Contacto:', value=df.loc[indice_modificar, 'Contacto'])
-            Email = st.sidebar.text_input('Email:', value=df.loc[indice_modificar, 'Email'])
-            Direccion = st.sidebar.text_input('Direccion:', value=df.loc[indice_modificar, 'Direccion'])
+            indice_modificar = df[df['Nombre_Cliente'] == Cliente_modificar].index[0].upper()
+            Telefono = st.sidebar.text_input('Telefono:', value=df.loc[indice_modificar, 'Telefono']).upper()
+            Contacto = st.sidebar.text_input('Contacto:', value=df.loc[indice_modificar, 'Contacto']).upper()
+            Email = st.sidebar.text_input('Email:', value=df.loc[indice_modificar, 'Email']).upper()
+            Direccion = st.sidebar.text_input('Direccion:', value=df.loc[indice_modificar, 'Direccion']).upper()
         
         if st.sidebar.button("Modificar"):
             # Validar que todos los campos estén completos
@@ -654,11 +654,11 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
     if opcion == "Crear Egreso":
         st.title("📁 Crear Egreso")
         nombre = st.sidebar.text_input("Nombre")
-        direccion = st.sidebar.text_input("Dirección")
-        contacto = st.sidebar.text_input("Contacto")
-        telefono = st.sidebar.text_input("Teléfono")
+        direccion = st.sidebar.text_input("Dirección").upper()
+        contacto = st.sidebar.text_input("Contacto").upper()
+        telefono = st.sidebar.text_input("Teléfono").upper()
         importe = st.sidebar.number_input("Importe", step=0.01, format="%.2f")
-        descripcion = st.sidebar.text_area("Descripción")
+        descripcion = st.sidebar.text_area("Descripción").upper()
         
         if st.sidebar.button("Agregar Egreso"):
             # Validar que todos los campos estén completos
@@ -679,7 +679,7 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
                         'Fecha': [datetime.now()]  # Guardar la fecha actual
                     })
                     df_egresos_creados = pd.concat([df_egresos_creados, nuevo_egreso], ignore_index=True)
-                    guardar_df(df_egresos_creados, "Egresos_Creados.csv")
+                    guardar_df(df_egresos_creados, "Egresos_Creados.xlsx")
                     st.sidebar.success("Egreso creado correctamente.")
 
                     # Mostrar el egreso agregado debajo de la tabla
@@ -715,7 +715,7 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
                         'Descripcion': egreso_detalle['Descripcion'].values[0]  # Obtener el valor único del egreso seleccionado
                     })
                     df_egresos_agregados = pd.concat([df_egresos_agregados, nuevo_egreso_agregado], ignore_index=True)
-                    guardar_df(df_egresos_agregados, "Egresos_Agregados.csv")
+                    guardar_df(df_egresos_agregados, "Egresos_Agregados.xlsx")
                     st.sidebar.success("Egreso agregado correctamente.")
 
                     # Actualizar el importe del egreso seleccionado en la tabla de egresos creados
