@@ -15,7 +15,7 @@
 8. [Contacto](#contacto)
 9. [Tecnologías utilizadas](#tecnolog%C3%ADas-utilizadas)
 
-La aplicación de gestión hospitalaria permite registrar y gestionar atenciones médicas de pacientes. Los usuarios pueden seleccionar camas, ingresar datos de pacientes y atenciones, y generar informes descargables. Facilita el seguimiento eficiente de tratamientos y procedimientos médicos, asegurando una gestión precisa y organizada.
+La aplicación está diseñada para ofrecer una gestión integral de las operaciones comerciales, optimizando el control de inventario, las relaciones con clientes y proveedores, y proporcionando herramientas para un análisis financiero y operativo detallado.
 
 ## Funcionalidades Principales
 
@@ -37,8 +37,6 @@ La aplicación de gestión hospitalaria permite registrar y gestionar atenciones
 5. **Análisis y Exportación de Datos:**
    - **Exportación a Excel:** Los datos filtrados pueden ser descargados en formato Excel, facilitando un análisis adicional y la generación de reportes personalizados.
    - **Visualización de Datos en Gráficos:** Ofrece gráficos y otras formas de visualización de datos para facilitar el análisis y la toma de decisiones rápidas basadas en la información disponible.
-
-La aplicación está diseñada para ofrecer una gestión integral de las operaciones comerciales, optimizando el control de inventario, las relaciones con clientes y proveedores, y proporcionando herramientas para un análisis financiero y operativo detallado.
 
 
 
