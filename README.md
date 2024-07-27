@@ -131,8 +131,9 @@ La aplicación está organizada en varias secciones, cada una con funcionalidade
 
 ## Archivos Principales
 
-**- main.py:** 
-  Archivo principal que contiene el código de la aplicación.
+**main.py:** 
+  
+  - Archivo principal que contiene el código de la aplicación.
 
 **Archivos Excel (.xlsx):**
    - Abogados.xlsx
