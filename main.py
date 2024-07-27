@@ -8,11 +8,7 @@ import matplotlib.pyplot as plt
 import requests
 from PIL import Image
 from io import BytesIO
-import streamlit as st
-import pandas as pd
-import datetime
-import openpyxl
-# import streamlit_image_coordinates
+
 
 
 # Agregar CSS personalizado para establecer el fondo abstracto
