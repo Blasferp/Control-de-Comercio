@@ -1,5 +1,5 @@
 # Control de Comercio:
-### Gestión de Procesos y Clientes para Comercios
+### Gestión de Control para Comercios
 
 ![Comercio](imagen/_4610f146-92bb-43d4-988a-91c1999c67e0.jpg)
 
