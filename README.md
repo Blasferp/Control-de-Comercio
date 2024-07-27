@@ -136,21 +136,14 @@ La aplicación está organizada en varias secciones, cada una con funcionalidade
   - Archivo principal que contiene el código de la aplicación.
 
 **Archivos Excel (.xlsx):**
-   - Abogados.xlsx
    - Clientes.xlsx
-   - Cobros.xlsx
-   - Empresas.xlsx
-   - Estado Civil.xlsx
-   - Exp Fisico.xlsx
-   - Fueros.xlsx
-   - Gastos.xlsx
-   - Juicios.xlsx
-   - Movimientos.xlsx
-   - Nacionalidad.xlsx
-   - Procesos.xlsx
+   - Egresos.xlsx
+   - Egresos_Agregados.xlsx
+   - Egresos_Creados.xlsx
+   - Productoa.xlsx
+   - Proveedores.xlsx
+   - Ventas.xlsx
    - Imágenes (.jpg y .png): Utilizadas en la interfaz de usuario.
-Notas
-Asegúrate de mantener actualizados los archivos Excel en el directorio raíz del proyecto para que la aplicación funcione correctamente.
 
 
 ## Notas
