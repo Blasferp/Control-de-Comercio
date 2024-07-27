@@ -8,6 +8,20 @@ import matplotlib.pyplot as plt
 import requests
 from PIL import Image
 from io import BytesIO
+import streamlit as st
+import pandas as pd
+import datetime
+import openpyxl
+# import streamlit_image_coordinates
+from streamlit_option_menu import option_menu
+from datetime import datetime
+import plotly.express as px
+import altair as alt
+import matplotlib.pyplot as plt
+import requests
+from PIL import Image
+from io import BytesIO
+from datetime import datetime
 
 # Agregar CSS personalizado para establecer el fondo abstracto
 page_bg_img = '''
