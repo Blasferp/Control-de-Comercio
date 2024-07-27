@@ -175,7 +175,7 @@ if selected == 'Productos':
     
     if accion == "Agregar Nuevo Producto":
         st.sidebar.title("Agregar Nuevo Producto")
-        Nombre_Producto = st.sidebar.text_input('Nombre_Producto:')
+        Nombre_Producto = st.sidebar.text_input('Nombre_Producto:').upper()
         Cantidad = st.sidebar.number_input('Cantidad:', min_value=0, step=1)
         Precio_Compra = st.sidebar.number_input('Precio_Compra:', min_value=0.0)        
         fecha_actual = datetime.now()
