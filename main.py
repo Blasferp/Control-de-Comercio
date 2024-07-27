@@ -41,9 +41,7 @@ resized_image = image.resize((new_width, new_height))
 # Mostrar la imagen en Streamlit
 st.image(resized_image, caption='Imagen desde Google Drive')
 
-# Ahora puedes seguir con el resto de tu código Streamlit aquí
-st.title("Mi Aplicación Streamlit")
-st.write("Este es el contenido de mi aplicación.")
+
 
 selected = option_menu(
     menu_title='Menu Principal',
