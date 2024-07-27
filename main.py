@@ -610,9 +610,9 @@ if selected == 'Egresos':
     st.title(f'💸 Egresos') 
     st.markdown("""En esta página se muestra una tabla con los datos de los egresos existentes, la cual podrás observar a continuación 👇.
 
-***👈 Puedes acceder en la barra lateral*** para agregar nuevos egresos o crear los egresos existentes. Selecciona la acción que deseas realizar en el menú desplegable de 'Gestión de egresos'.
+***👈 Puedes acceder en la barra lateral*** para agregar nuevos egresos. Selecciona la acción que deseas realizar en el menú desplegable de 'Gestión de egresos'.
 
-Una vez elegida la opción deseada, aparecerán a continuación menús desplegables o campos para rellenar. Puedes agregar o modificar el nombre del proveedor, el contacto, el teléfono, el correo electrónico y la dirección. Una vez que hayas completado los campos, presiona el botón 'Agregar importe' o 'Actualizar importe' .
+Una vez elegida la opción deseada, podrás agregar el importe y la descripción del egreso. Presiona el botón 'Agregar Egreso' para completar la acción.
 
 ¡No te olvides de completar todos los campos! 💪""")
 
@@ -621,26 +621,21 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
         try:
             df = pd.read_excel(nombre_archivo)
         except FileNotFoundError:
-            df = pd.DataFrame(columns=['Nombre', 'Direccion', 'Contacto', 'Telefono', 'Importe', 'Descripcion', 'Fecha'])
+            df = pd.DataFrame(columns=['Proveedor', 'Importe', 'Descripcion', 'Fecha'])
         return df
 
     # Función para guardar el DataFrame en un archivo excel
     def guardar_df(df, nombre_archivo):
         df.to_excel(nombre_archivo, index=False)
 
-    # Cargar el DataFrame de egresos creados
-    df_egresos_creados = cargar_df("Egresos_Creados.xlsx")
-
     # Cargar el DataFrame de egresos agregados
     df_egresos_agregados = cargar_df("Egresos_Agregados.xlsx")
 
-    # Mostrar la tabla de egresos creados
-    st.title("📅 Tabla de Egresos Creados")
-    st.dataframe(df_egresos_creados)
-    st.markdown("<hr>", unsafe_allow_html=True)  # Separador horizontal
+    # Cargar DataFrame de proveedores
+    df_proveedores = cargar_df("Proveedores.xlsx")
 
     # Mostrar la tabla de egresos agregados
-    st.title("📝 Tabla de Egresos Agregados")
+    st.title("📝 Lista de Egresos Agregados")
     st.dataframe(df_egresos_agregados)
     
     # Calcular el total de egresos agregados
@@ -648,85 +643,42 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
     st.write(f"**Total de Egresos Agregados:** {total_egresos_agregados}")
     st.markdown("<hr>", unsafe_allow_html=True)  # Separador horizontal
 
-    # Sidebar para elegir la opción
-    opcion = st.sidebar.selectbox("Seleccionar Opción", ("Seleccionar Opción", "Crear Egreso", "Agregar Egreso"))
+    # Sidebar para seleccionar la opción
+    opcion = st.sidebar.selectbox("Seleccionar Opción", ["Agregar Egreso"])
+    
+    if opcion == "Agregar Egreso":
+        # Seleccionar proveedor existente
+        proveedores = df_proveedores['Nombre_Proveedor'].tolist()
+        proveedor_seleccionado = st.sidebar.selectbox("Seleccionar Proveedor", proveedores)
 
-    if opcion == "Crear Egreso":
-        st.title("📁 Crear Egreso")
-        nombre = st.sidebar.text_input("Nombre")
-        direccion = st.sidebar.text_input("Dirección").upper()
-        contacto = st.sidebar.text_input("Contacto").upper()
-        telefono = st.sidebar.text_input("Teléfono").upper()
+        # Ingresar importe y descripción del egreso
         importe = st.sidebar.number_input("Importe", step=0.01, format="%.2f")
         descripcion = st.sidebar.text_area("Descripción").upper()
-        
+
         if st.sidebar.button("Agregar Egreso"):
             # Validar que todos los campos estén completos
-            if not nombre or not direccion or not contacto or not telefono or importe is None or not descripcion:
+            if not proveedor_seleccionado or importe is None or not descripcion:
                 st.sidebar.warning("Por favor completa todos los campos.")
             else:
-                # Verificar si el egreso ya existe en la tabla de egresos creados
-                if nombre in df_egresos_creados['Nombre'].values:
-                    st.sidebar.warning("Ya existe un egreso con ese nombre.")
-                else:
-                    nuevo_egreso = pd.DataFrame({
-                        'Nombre': [nombre],
-                        'Direccion': [direccion],
-                        'Contacto': [contacto],
-                        'Telefono': [telefono],
-                        'Importe': [importe],
-                        'Descripcion': [descripcion],
-                        'Fecha': [datetime.now()]  # Guardar la fecha actual
-                    })
-                    df_egresos_creados = pd.concat([df_egresos_creados, nuevo_egreso], ignore_index=True)
-                    guardar_df(df_egresos_creados, "Egresos_Creados.xlsx")
-                    st.sidebar.success("Egreso creado correctamente.")
+                # Crear nueva fila para el egreso
+                nuevo_egreso = pd.DataFrame({
+                    'Proveedor': [proveedor_seleccionado],
+                    'Importe': [importe],
+                    'Descripcion': [descripcion],
+                    'Fecha': [datetime.now()]
+                })
 
-                    # Mostrar el egreso agregado debajo de la tabla
-                    st.header("Egreso Agregado")
-                    st.write(nuevo_egreso)
+                # Añadir el nuevo egreso al DataFrame
+                df_egresos_agregados = pd.concat([df_egresos_agregados, nuevo_egreso], ignore_index=True)
 
-    elif opcion == "Agregar Egreso":
-        st.title("📁 Agregar Egreso")
-        opciones_egresos = df_egresos_creados['Nombre'].tolist()
-        egreso_seleccionado = st.sidebar.selectbox("Seleccionar Egreso Existente", opciones_egresos)
-        
-        if egreso_seleccionado:
-            # Mostrar detalles del egreso seleccionado
-            egreso_detalle = df_egresos_creados[df_egresos_creados['Nombre'] == egreso_seleccionado]
-            # st.sidebar.write("Detalles del Egreso:")
-            # st.sidebar.write(egreso_detalle)
-
-            # Agregar importe float en la barra lateral
-            nuevo_importe = st.sidebar.number_input("Nuevo Importe", step=0.01, format="%.2f")
-
-            if st.sidebar.button("Actualizar Importe"):
-                # Validar que el importe no esté vacío
-                if nuevo_importe is None:
-                    st.sidebar.warning("Por favor ingresa un valor para el importe.")
-                else:
-                    # Actualizar el importe del egreso seleccionado en la tabla de egresos agregados
-                    nuevo_egreso_agregado = pd.DataFrame({
-                        'Nombre': [egreso_seleccionado],
-                        'Direccion': egreso_detalle['Direccion'].values[0],  # Obtener el valor único del egreso seleccionado
-                        'Contacto': egreso_detalle['Contacto'].values[0],    # Obtener el valor único del egreso seleccionado
-                        'Telefono': egreso_detalle['Telefono'].values[0],    # Obtener el valor único del egreso seleccionado
-                        'Importe': [nuevo_importe],
-                        'Descripcion': egreso_detalle['Descripcion'].values[0]  # Obtener el valor único del egreso seleccionado
-                    })
-                    df_egresos_agregados = pd.concat([df_egresos_agregados, nuevo_egreso_agregado], ignore_index=True)
-                    guardar_df(df_egresos_agregados, "Egresos_Agregados.xlsx")
-                    st.sidebar.success("Egreso agregado correctamente.")
-
-                    # Actualizar el importe del egreso seleccionado en la tabla de egresos creados
-                    df_egresos_creados.loc[df_egresos_creados['Nombre'] == egreso_seleccionado, 'Importe'] = nuevo_importe
-                    guardar_df(df_egresos_creados, "Egresos_Creados.xlsx")
-
-                    # Mostrar el producto modificado debajo de la tabla
-                    st.header("Producto Modificado")
-                    st.write(egreso_detalle)
-
-
+                # Guardar el DataFrame actualizado
+                guardar_df(df_egresos_agregados, "Egresos_Agregados.xlsx")
+                st.sidebar.success("Egreso agregado correctamente.")
+                
+                # Mostrar el egreso agregado y la tabla de egresos actualizada
+                st.header("Egreso Agregado")
+                st.write(nuevo_egreso)
+                
 
 ######################################################################################################    
 
