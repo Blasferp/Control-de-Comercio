@@ -124,9 +124,9 @@ La aplicación está organizada en varias secciones, cada una con funcionalidade
 ## Imagenes
 
 
-![Menu](imagen\Menu.PNG)
+![Menu](imagen/Menu.PNG)
 
-![graficos](imagen\graficos.PNG)
+![graficos](imagen/graficos.PNG)
 
 
 ## Archivos Principales
