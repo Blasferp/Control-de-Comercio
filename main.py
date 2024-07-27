@@ -610,11 +610,14 @@ if selected == 'Egresos':
     st.title(f'💸 Egresos') 
     st.markdown("""En esta página se muestra una tabla con los datos de los egresos existentes, la cual podrás observar a continuación 👇.
 
-***👈 Puedes acceder en la barra lateral*** para agregar nuevos egresos. Selecciona la acción que deseas realizar en el menú desplegable de 'Gestión de egresos'.
+***👈 Puedes acceder en la barra lateral*** para realizar diferentes acciones relacionadas con los egresos. Selecciona la opción deseada en el menú desplegable de 'Gestión de egresos':
 
-Una vez elegida la opción deseada, podrás agregar el importe y la descripción del egreso. Presiona el botón 'Agregar Egreso' para completar la acción.
+1. **Agregar Egreso**: Permite registrar un nuevo egreso. Deberás seleccionar un proveedor existente, ingresar el importe y proporcionar una descripción. Presiona el botón 'Agregar Egreso' para completar la acción.
 
-¡No te olvides de completar todos los campos! 💪""")
+2. **Filtrar Egresos**: Permite aplicar filtros a los egresos ya registrados. Puedes filtrar por proveedor y por rango de fechas (opcional) para ver los egresos que se ajusten a tus criterios. Presiona el botón 'Aplicar Filtros' para ver los resultados.
+
+¡Asegúrate de completar todos los campos necesarios al agregar un egreso y de configurar los filtros según tu necesidad! 💪""")
+
 
     # Función para cargar el DataFrame desde un archivo excel
     def cargar_df(nombre_archivo):
@@ -634,17 +637,8 @@ Una vez elegida la opción deseada, podrás agregar el importe y la descripción
     # Cargar DataFrame de proveedores
     df_proveedores = cargar_df("Proveedores.xlsx")
 
-    # Mostrar la tabla de egresos agregados
-    st.title("📝 Lista de Egresos Agregados")
-    st.dataframe(df_egresos_agregados)
-    
-    # Calcular el total de egresos agregados
-    total_egresos_agregados = df_egresos_agregados['Importe'].sum()
-    st.write(f"**Total de Egresos Agregados:** {total_egresos_agregados}")
-    st.markdown("<hr>", unsafe_allow_html=True)  # Separador horizontal
-
     # Sidebar para seleccionar la opción
-    opcion = st.sidebar.selectbox("Seleccionar Opción", ["Agregar Egreso"])
+    opcion = st.sidebar.selectbox("Seleccionar Opción", ["Agregar Egreso", "Filtrar Egresos"])
     
     if opcion == "Agregar Egreso":
         # Seleccionar proveedor existente
@@ -678,6 +672,41 @@ Una vez elegida la opción deseada, podrás agregar el importe y la descripción
                 # Mostrar el egreso agregado y la tabla de egresos actualizada
                 st.header("Egreso Agregado")
                 st.write(nuevo_egreso)
+
+    elif opcion == "Filtrar Egresos":
+        # Filtros por proveedor y fecha
+        st.sidebar.header("Filtros de Egresos")
+        
+        # Filtro por proveedor
+        proveedores = df_proveedores['Nombre_Proveedor'].tolist()
+        proveedor_filtrar = st.sidebar.selectbox("Seleccionar Proveedor (opcional)", ["Todos"] + proveedores)
+
+        # Filtro por rango de fechas
+        fecha_inicio = st.sidebar.date_input("Fecha Inicio (opcional)", min_value=df_egresos_agregados['Fecha'].min().date(), value=df_egresos_agregados['Fecha'].min().date())
+        fecha_fin = st.sidebar.date_input("Fecha Fin (opcional)", max_value=df_egresos_agregados['Fecha'].max().date(), value=df_egresos_agregados['Fecha'].max().date())
+
+        if st.sidebar.button("Aplicar Filtros"):
+            # Aplicar filtros
+            df_filtrado = df_egresos_agregados.copy()
+
+            # Aplicar filtro por rango de fechas si se ha especificado
+            if fecha_inicio and fecha_fin:
+                df_filtrado = df_filtrado[
+                    (df_filtrado['Fecha'].dt.date >= fecha_inicio) &
+                    (df_filtrado['Fecha'].dt.date <= fecha_fin)
+                ]
+            
+            # Aplicar filtro por proveedor si se ha especificado
+            if proveedor_filtrar != "Todos":
+                df_filtrado = df_filtrado[df_filtrado['Proveedor'] == proveedor_filtrar]
+            
+            # Mostrar el DataFrame filtrado
+            st.title("📝 Egresos Filtrados")
+            st.dataframe(df_filtrado)
+            
+            # Calcular el total de egresos filtrados
+            total_egresos_filtrados = df_filtrado['Importe'].sum()
+            st.write(f"**Total de Egresos Filtrados:** {total_egresos_filtrados}")
                 
 
 ######################################################################################################    
