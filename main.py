@@ -449,7 +449,7 @@ Una vez elegida la opción deseada, aparecerán a continuación menús desplegab
         Cliente_modificar = st.sidebar.selectbox("Selecciona un Cliente:", opciones)
 
         if Cliente_modificar:
-            indice_modificar = df[df['Nombre_Cliente'] == Cliente_modificar].index[0].upper()
+            indice_modificar = df[df['Nombre_Cliente'] == Cliente_modificar].index[0]
             Telefono = st.sidebar.text_input('Telefono:', value=df.loc[indice_modificar, 'Telefono']).upper()
             Contacto = st.sidebar.text_input('Contacto:', value=df.loc[indice_modificar, 'Contacto']).upper()
             Email = st.sidebar.text_input('Email:', value=df.loc[indice_modificar, 'Email']).upper()
