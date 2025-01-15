@@ -128,81 +128,61 @@ st.sidebar.markdown("<hr>", unsafe_allow_html=True)
 if selected == 'Productos':
     st.title(f'🎁 Productos') 
     st.markdown("""
-            En esta página se muestra una tabla con los datos de los productos existentes, la cual podrás observar a continuación. 👇
+        En esta página se muestra una tabla con los datos de los productos existentes, la cual podrás observar a continuación. 👇
 
-            ***👈 Puedes acceder en la barra lateral*** para agregar nuevos productos o modificar los productos existentes. Selecciona la acción que deseas realizar en el menú desplegable de 'Gestión de productos'.
+        ***👈 Puedes acceder en la barra lateral*** para agregar nuevos productos o modificar los productos existentes. Selecciona la acción que deseas realizar en el menú desplegable de 'Gestión de productos'.
 
-            Una vez elegida la opción deseada, aparecerán a continuación menús desplegables o campos para rellenar. Puedes agregar o modificar el nombre del producto, la cantidad, el precio de compra y el precio de venta. Una vez que hayas completado los campos, presiona el botón 'Agregar'.
+        Una vez elegida la opción deseada, aparecerán a continuación menús desplegables o campos para rellenar. Puedes agregar o modificar el nombre del producto, la cantidad, el precio de compra y el precio de venta. Una vez que hayas completado los campos, presiona el botón 'Agregar'.
 
-            ¡No te olvides de completar todos los campos! 💪
-            """
-    )
-    # Separador horizontal
+        ¡No te olvides de completar todos los campos! 💪
+    """)
     st.markdown("<hr>", unsafe_allow_html=True)  
-      
+
     st.header(f'📅 Tabla de Productos')
-    # Función para cargar el DataFrame desde un archivo CSV
+
     def cargar_df():
         try:
             df = pd.read_excel("Productos.xlsx")
         except FileNotFoundError:
-            df = pd.DataFrame(columns=['Nombre_Producto', 'Cantidad', 'Precio_Compra'])
+            df = pd.DataFrame(columns=['Nombre_Producto', 'Cantidad', 'Precio_Compra', 'Fecha'])
         return df
 
-    # Función para guardar el DataFrame en un archivo CSV
     def guardar_df(df):
         df.to_excel("Productos.xlsx", index=False)
 
-    # Cargar el DataFrame al inicio de la aplicación
     df = cargar_df()
-
-    # Mostrar el DataFrame actualizado
     st.dataframe(df)
 
-    # Variables para rastrear la acción
     accion_realizada = None
     indice_modificado = None
 
-    # Sidebar
-    # Título grande para la selección de gestión de productos
     st.sidebar.title("Gestión de Productos")
-    
-    # Opciones de la selección de gestión de productos
     accion = st.sidebar.selectbox("Seleccione una acción", ["Agregar Nuevo Producto", "Modificar Producto"])
-    
-    # Separar con línea horizontal
     st.sidebar.markdown("<hr>", unsafe_allow_html=True)
-    
+
     if accion == "Agregar Nuevo Producto":
         st.sidebar.title("Agregar Nuevo Producto")
-        Nombre_Producto = st.sidebar.text_input('Nombre_Producto:').upper()
+        Nombre_Producto = st.sidebar.text_input('Nombre del Producto:').strip().upper()
         Cantidad = st.sidebar.number_input('Cantidad:', min_value=0, step=1)
-        Precio_Compra = st.sidebar.number_input('Precio_Compra:', min_value=0.0)        
-        fecha_actual = datetime.now()
-        # fecha_str = fecha_actual.strftime("%Y-%m-%d %H:%M:%S")
-        
-        if st.sidebar.button("Agregar"):
-            # Cargar el DataFrame existente
-            df = cargar_df()
+        Precio_Compra = st.sidebar.number_input('Precio de Compra:', min_value=0.0)
+        fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        if st.sidebar.button("Agregar"):
             if not Nombre_Producto:
                 st.sidebar.warning("Debe ingresar el nombre del producto.")
             elif Nombre_Producto in df['Nombre_Producto'].values:
                 st.sidebar.warning("El producto ya existe. Por favor, elige otro nombre.")
             else:
-                # Crear nueva fila con los datos del nuevo producto
-                nueva_fila = pd.DataFrame({'Nombre_Producto': [Nombre_Producto],
-                                        'Cantidad': [Cantidad],
-                                        'Precio_Compra': [Precio_Compra],                                        
-                                        'Fecha': [fecha_actual]})
-                
-                # Concatenar el DataFrame original con el nuevo DataFrame
+                nueva_fila = pd.DataFrame({
+                    'Nombre_Producto': [Nombre_Producto],
+                    'Cantidad': [Cantidad],
+                    'Precio_Compra': [Precio_Compra],
+                    'Fecha': [fecha_actual]
+                })
                 df = pd.concat([df, nueva_fila], ignore_index=True)
-
-                # Guardar el DataFrame actualizado
                 guardar_df(df)
-                accion_realizada = "Agregado"
-                indice_modificado = df.shape[0] - 1  # Í
+                accion_realizada = "agregado"
+                indice_modificado = df.shape[0] - 1
 
     elif accion == "Modificar Producto":
         st.sidebar.title("Modificar Producto")
@@ -210,32 +190,33 @@ if selected == 'Productos':
         producto_modificar = st.sidebar.selectbox("Selecciona un producto:", opciones)
 
         if producto_modificar:
-            indice_modificar = df[df['Nombre_Producto'] == producto_modificar].index[0].upper()
-            Nombre_Producto = st.sidebar.text_input('Nombre_Producto:', value=producto_modificar).upper()  # Agregar campo para modificar el nombre
-            Cantidad = st.sidebar.number_input('Cantidad:', min_value=0, step=1, value=df.loc[indice_modificar, 'Cantidad'])
-            Precio_Compra = st.sidebar.number_input('Precio_Compra:', min_value=0.0, value=float(df.loc[indice_modificar, 'Precio_Compra']), format="%.2f")
+            indice_modificar = df[df['Nombre_Producto'] == producto_modificar].index[0]
+            Cantidad = st.sidebar.number_input(
+                'Cantidad:',
+                min_value=0,
+                step=1,
+                value=int(df.loc[indice_modificar, 'Cantidad'])
+            )
+            Precio_Compra = st.sidebar.number_input(
+                'Precio de Compra:',
+                min_value=0.0,
+                value=float(df.loc[indice_modificar, 'Precio_Compra']),
+                format="%.2f"
+            )
 
             if st.sidebar.button("Modificar"):
-                # Actualizar los valores en el DataFrame
-                df.loc[indice_modificar, 'Nombre_Producto'] = Nombre_Producto  # Actualizar el nombre del producto
                 df.loc[indice_modificar, 'Cantidad'] = Cantidad
                 df.loc[indice_modificar, 'Precio_Compra'] = Precio_Compra
-
-                # Guardar el DataFrame actualizado
                 guardar_df(df)
-                accion_realizada = "Modificado"
+                accion_realizada = "modificado"
                 indice_modificado = indice_modificar
-                    
-    # Separar el último encabezado del resto del contenido con una línea horizontal
-    st.markdown("<hr>", unsafe_allow_html=True)         
-        
-    # Titulo del Producto modificado            
-    st.header("📝 Producto agregado o modificado")
 
-    # Mostrar la fila que se agregó o modificó
+    st.markdown("<hr>", unsafe_allow_html=True)  
+
+    st.header("📝 Producto agregado o modificado")
     if accion_realizada:
         st.sidebar.success(f"Se ha {accion_realizada} el producto:")
-        st.dataframe(df.iloc[indice_modificado:indice_modificado+1])
+        st.dataframe(df.iloc[[indice_modificado]])
 
 ############################################################################################################
 
